@@ -16,6 +16,9 @@ public class ClickGuiClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         Effects.init();
+        Hud.init();
+        Tweaks.init();
+        SkyBox.init();
         KeyBinding.Category cat = KeyBinding.Category.create(Identifier.of("clickgui", "main"));
         KeyBinding open = KeyBindingHelper.registerKeyBinding(
                 new KeyBinding("key.clickgui.open", GLFW.GLFW_KEY_RIGHT_SHIFT, cat));

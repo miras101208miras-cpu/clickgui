@@ -93,6 +93,15 @@ public class ClickGuiScreen extends Screen {
         clipTop = y + 4; clipBottom = y + PANEL_H - 4;
         ctx.enableScissor(x, clipTop, x + IW, clipBottom);
         int start = y + 6 - (int) scroll, cy = start;
+        // ---- кнопка редактора HUD во вкладке HUD ----
+        if (current == Category.HUD) {
+            int bx = x + 6, bw = IW - 14, bh = ROW - 2;
+            boolean hv = inside(mx, my, bx, cy, bw, bh);
+            if (hv) roundRect(ctx, bx, cy, bw, bh, 5, Theme.accent()); else glass(ctx, bx, cy, bw, bh, 5);
+            ctxt(ctx, russian ? "Редактировать HUD" : "Edit HUD", bx + bw / 2, cy + 5, hv ? DARK : WHITE);
+            hit(bx, cy, bw, bh, b -> client.setScreen(new HudEditorScreen()));
+            cy += ROW + 4;
+        }
         for (Module m : ModuleManager.byCategory(current)) cy = renderModule(ctx, m, x + 6, cy, IW - 14, mx, my);
         ctx.disableScissor();
         contentH = cy - start + 6;
@@ -153,13 +162,14 @@ public class ClickGuiScreen extends Screen {
             int cx = x + 8, cy = y + 13;
             for (String o : mu.options) {
                 int cw = tw(o) + 12;
+                if (cx + cw > x + w - 4) { cx = x + 8; cy += 16; }
                 boolean on = mu.selected.contains(o);
                 if (on) roundRect(ctx, cx, cy, cw, 13, 4, Theme.accent()); else glass(ctx, cx, cy, cw, 13, 4);
                 txt(ctx, o, cx + 6, cy + 3, on ? DARK : WHITE);
                 hit(cx, cy, cw, 13, k -> mu.toggle(o));
                 cx += cw + 4;
             }
-            return y + SUB + 14;
+            return cy + 19;
         }
         if (s instanceof Setting.Mode md) {
             txt(ctx, md.name, x + 8, y + 2, GRAY);
